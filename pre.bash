@@ -1,5 +1,5 @@
 apt-get update
-apt-get install -y vim less gcc tree make libapr1-dev libaprutil1-dev libpcre3-dev libxml2-dev autoconf git curl  libcurl4-openssl-dev pkg-config
+apt-get install -y vim less gcc tree make libapr1-dev libaprutil1-dev libpcre3-dev libxml2-dev autoconf git curl  libcurl4-openssl-dev pkg-config libssl-dev
 cd
 tar -xzf httpd-2.4.41.tar.gz
 tar -xzf php-7.2.26.tar.gz
@@ -8,7 +8,7 @@ cd httpd-2.4.41
 make
 make install
 cd ../php-7.2.26
-./configure --with-apxs2=/usr/local/apache2/bin/apxs --with-mysql --with-openssl
+./configure --with-apxs2=/usr/local/apache2/bin/apxs --with-mysql --with-openssl --with-zlib
 make
 make install
 cd
