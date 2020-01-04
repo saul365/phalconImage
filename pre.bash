@@ -8,9 +8,10 @@ cd httpd-2.4.41
 make
 make install
 cd ../php-7.2.26
-./configure --with-apxs2=/usr/local/apache2/bin/apxs --with-mysql --with-openssl --with-zlib --with-mbstring
+./configure --with-apxs2=/usr/local/apache2/bin/apxs --with-pdo-mysql --with-openssl --with-zlib --enable-mbstring --with-curl --enable-zip
 make
 make install
+cp php.ini-development /usr/local/lib/php.ini
 cd
 git clone https://github.com/jbboehr/php-psr.git
 cd php-psr
@@ -24,7 +25,7 @@ cat php.txt |tee -a /usr/local/apache2/conf/httpd.conf
 mv info.php /usr/local/apache2/htdocs/
 wget https://github.com/phalcon/zephir/releases/download/0.12.15/zephir.phar
 chmod +x zephir.phar
-mv zephir.phar /usr/local/sbin
+mv zephir.phar /usr/local/sbin/zephir
 cd
 git clone git://github.com/phalcon/php-zephir-parser.git
 cd php-zephir-parser
@@ -38,11 +39,17 @@ git clone https://github.com/phalcon/cphalcon
 cd cphalcon/
 git checkout tags/v4.0.0 ./
 zephir fullclean
-zephir build
-#extension=phalcon.so | tee
+zephir compile
+cd ext
+phpize
+./configure
+make && make install
+echo extension=phalcon.so | tee -a /usr/local/lib/php.ini
 cd
-git clone https://github.com/saul365/voltDirectory
-cd voltDirectory
-git checkout phalcon4
+git clone https://github.com/phalcon/phalcon-devtools.git
+cd phalcon-devtools
+ln -s $(pwd)/phalcon /usr/bin/phalcon
+chmod ugo+x /usr/bin/phalcon
 curl -s http://getcomposer.org/installer | php
 php composer.phar install
+/usr/local/apache2/bin/apachectl start
